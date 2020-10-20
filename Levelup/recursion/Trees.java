@@ -454,7 +454,7 @@ class Trees{
        root.left=pre_post(preorder,presi+1,presi+len+1,postorder,postsi,idx);
        root.right=pre_post(preorder,presi+len+2,preei,postorder,idx+1,preei-1);
        return root;
-   }
+    }
     public static void solve(){
         // int[] arr={3 ,4, 5 ,-10 ,4 ,-15 ,5 ,6 ,-8 ,1 ,3 ,9 ,2 ,-3 ,-1 ,-1 ,-1 ,-1 ,-1 ,0 ,-1 ,-1 ,-1 ,-1 ,4 ,-1 ,-1 ,-1 ,10 ,-1};
         
