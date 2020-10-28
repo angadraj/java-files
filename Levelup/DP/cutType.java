@@ -195,6 +195,25 @@ class cutType{
        }
        return min_ans;
     }
+    //rod cutting
+    public static int rod_cutting_01(int[] arr){
+        // int[] narr=new int[arr.length+1];
+        // for(int i=0;i<arr.length;i++){
+        //     narr[i+1]=arr[i];
+        // }
+        int[] dp=new int[arr.length];
+        dp[0]=arr[0];
+        for(int i=1;i<dp.length;i++){
+            dp[i]=arr[i]; // self comparison and in while loop cartesian product 
+            int li=0;
+            int ri=i-1;
+            while(li<=ri){
+                dp[i]=Math.max(dp[i],dp[li]+dp[ri]);
+                li++;ri--;
+            }
+        }
+        return dp[dp.length-1];
+    }
     public static void solve(){
         // int[] arr={1,2,3,4,3};
         // int[] arr={40, 20, 30, 10, 30}  ;
@@ -237,7 +256,13 @@ class cutType{
                 // }
                 // System.out.println(obst(keys,freq,0,n-1,prefixSum));
 
-                booleanPar();
+                //boolean parenthization 
+                // booleanPar();
+
+                //rod cutting
+                // int[] arr={1,5,8,9,10,17,17,20};
+                int[] arr={5,8,4};
+                System.out.println(rod_cutting_01(arr));
     }
     //boolean parenthization : based only on faith
     static class pairParenth{
