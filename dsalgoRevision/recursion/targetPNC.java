@@ -291,7 +291,7 @@ class targetPNC {
             System.out.println();
             return 1;
         }
-        int n = chess.length;
+        // int n = chess.length;
         int m = chess[0].length;
         int count = 0;
 
