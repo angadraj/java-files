@@ -276,13 +276,93 @@ class targetPNC {
     }
 
     // n queens branch and bound , row wise 
-   
+    static boolean cols[];
+    static boolean diag[];
+    static boolean adiag[];
+
+    public static int nQueen1(int[][] chess, int tnq, int row){
+        if(row == chess.length || tnq == 0){
+            for(int[] arr : chess){
+                for(int val : arr){
+                    System.out.print(val == 0 ? "- " : "q ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            return 1;
+        }
+        int n = chess.length;
+        int m = chess[0].length;
+        int count = 0;
+
+        for(int col = 0; col < m; col++){
+            if(!cols[col] && !diag[row + col] && !adiag[row - col + m] && chess[row][col] == 0){
+               
+                cols[col] = true;
+                diag[row + col] = true;
+                adiag[row - col + m] = true;
+                chess[row][col] = 1;
+
+                count += nQueen1(chess, tnq - 1, row + 1);
+
+                chess[row][col] = 0;
+                cols[col] = false;
+                diag[row + col] = false;
+                adiag[row - col + m] = false;
+            }
+        }
+        return count;
+    }
+    // N queens bit wise
+    static int colsB = 0;
+    static int diagB = 0;
+    static int adiagB = 0;
+    
+    public static int nQueen3(int[][] chess, int tnq, int row){
+        if(tnq == 0){
+            for(int[] arr : chess){
+                for(int val : arr){
+                    System.out.print(val != 0 ? "q " : "- ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            return 1;
+        }
+        int count = 0;
+        int m = chess[0].length;
+        for(int col = 0; col < m; col++){
+            if(
+                (colsB & (1 << col)) == 0 &&
+                (diagB & (1 << (row + col))) == 0 &&
+                (adiagB & (1 << (row - col + m))) == 0 && 
+                chess[row][col] == 0
+            ){
+                chess[row][col] = 1;
+                colsB ^= (1 << col);
+                diagB ^= (1 << (row + col));
+                adiagB ^= (1 << (row - col + m));
+
+                count += nQueen3(chess, tnq - 1, row + 1);
+
+                chess[row][col] = 0;
+                colsB ^= (1 << col);
+                diagB ^= (1 << (row + col));
+                adiagB ^= (1 << (row - col + m));
+            }
+        }
+        return count;
+    }
 
     public static void solve(){
         int[][] boxes = new int[4][4];
         int n = boxes.length; 
+        int tnq = n;
         int m = boxes[0].length;
-       
+        cols = new boolean[m];
+        diag = new boolean[n + m - 1];
+        adiag = new boolean[n + m - 1];
+        System.out.println(nQueen3(boxes, tnq, 0));
     }
 }
 
