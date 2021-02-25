@@ -31,7 +31,13 @@ class extra {
         }
         return count;
     }
+
+    public static void stringIndex(String str,int idx, String ans){
+        char ch = str.charAt(idx);
+        
+    }
+
     public static void solve(){
-        wordBreak();
+       
     }
 }
