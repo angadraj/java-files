@@ -1,5 +1,4 @@
 import java.util.*;
-import java.lang.*;
 class BinaryStrings_02{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
@@ -19,16 +18,16 @@ class BinaryStrings_02{
         }
         return a+b;
     }
-    // public static int rec(int n,String ans){
-    //     if(ans.length()==n){
-    //         // System.out.print(ans+" ");
-    //         return 1;
-    //     }
-    //     int mycount=0;
-    //      mycount+=rec(n,ans+'0');
-    //     if(ans.length()==0 || ans.charAt(ans.length()-1)=='0'){
-    //         mycount+=rec(n,ans+'1');
-    //     }
-    //     return mycount;
-    // }     
+    public static int rec(int n,String ans){
+        if(ans.length()==n){
+            // System.out.print(ans+" ");
+            return 1;
+        }
+        int mycount=0;
+         mycount+=rec(n,ans+'0');
+        if(ans.length()==0 || ans.charAt(ans.length()-1)=='0'){
+            mycount+=rec(n,ans+'1');
+        }
+        return mycount;
+    }     
 }
