@@ -489,8 +489,8 @@ class Trees{
         // List<Integer> ans2=NTRP(root,100);
         // System.out.print(ans2);
         // System.out.println(LCA(root,80,90));
-        LCA_eff(root,3,100);
-        System.out.println(x.data);
+        // LCA_eff(root,3,100);
+        // System.out.println(x.data);
         // List<Integer> ans=knodesFar(root,2,20);
         // List<Integer> ans=new ArrayList<>();
         // knodes_far_Optimized(root,2,20,ans);

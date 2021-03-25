@@ -331,14 +331,14 @@ class TreeView{
         }
     }
     public static void solve(){
-        int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,-1,-1,70,100,-1,-1,110,-1,-1};
+        int[] arr = {10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
         Node root=construct(arr);
         // display(root);//preorder
         System.out.println();
         // bfs_01(root);
         // Left_view(root);
         // right_View(root);
-        // vertical_order(root);
+        vertical_order(root);
         // vertical_order_sum(root);
         // bottom_view_right(root);
         // bottom_view_left(root);
