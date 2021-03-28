@@ -73,6 +73,21 @@ class main2 {
         return root;
     }
 
+    public static Node bstFromPost(int[] arr, int lr, int rr) {
+        if(idx < 0 || arr[idx] < lr) return null;
+        Node root = new Node(arr[idx]); 
+        idx--;
+        root.right = bstFromPost(arr, root.data, rr);
+        root.left = bstFromPost(arr, lr, root.data);
+        return root;
+    }
+
+    public static Node bstConstructionFromTraversal(int[] arr) {
+        idx = arr.length - 1;
+        Node root = bstFromPost(arr, -(int)(1e8), (int)(1e8));
+        return root;
+    }
+
     public static void print(Node root) {
         if(root == null) return;
         String ans = "";
@@ -323,11 +338,35 @@ class main2 {
         return ans.data;
     }
 
+    public static void findPlaceInTree(Node root, Node child) {
+        if(root == null) return;
+
+        if(child.data < root.data) {
+            if(root.left != null) findPlaceInTree(root.left, child);
+            else  root.left = child;
+        } else if(child.data > root.data) {
+            if(root.right != null) findPlaceInTree(root.right, child);
+            else root.right = child;
+        }
+    }
+
+    public static Node bstFromLevel(int[] arr) {
+        Node root = new Node(arr[0]);
+        for(int i = 0; i < arr.length; i++) {
+            Node child = new Node(arr[i]);
+            findPlaceInTree(root, child);
+        }
+        return root;
+    }
+
     public static void solve() {
-        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        Node root = construct(arr, 0, arr.length - 1);
+        // int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        // Node root = construct(arr, 0, arr.length - 1);
+        // display(root);    
+        int[] arr = {5, 2, 6, 1, 3, 7, 4, 8, 9};
+        Node root = bstFromLevel(arr);
         display(root);
-        System.out.println(in);
+        System.out.println(post);
         System.out.println(pre);
     }
 
