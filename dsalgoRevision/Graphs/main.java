@@ -492,7 +492,7 @@ class main {
         int src = 0;
         int dest = 6;
         boolean[] vis = new boolean[graph.length];
-        iterativeDfs(graph, 0, vis);
+        isBipartite(graph);
     }
      public static void main(String args[]) {
         solve();
