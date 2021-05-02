@@ -11,6 +11,7 @@ class AdjacentSum{
         boolean flag=false;
         // System.out.println(rec(arr,0,Integer.MIN_VALUE));
         System.out.println(dp(arr));
+        System.out.println("hello world");
     }
     public static int dp(int[] arr){
         int inc=arr[0];
