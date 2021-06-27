@@ -1376,6 +1376,448 @@ class Adv {
         return ans;
     }
 
+    // largest square submatrix of all 1's
+    public static int largestSqSubmatrix(int[][] arr) {
+        int[][] dp = new int[arr.length][arr[0].length];
+        int ans = -(int)(1e8);
+        for (int i = dp.length - 1; i >= 0; i--) {
+            for (int j = dp[0].length - 1; j >= 0; j--) {
+                if (i == dp.length - 1 || j == dp[0].length - 1) dp[i][j] = arr[i][j];
+                else {
+                    dp[i][j] = (arr[i][j] == 0) ? 0 : Math.min(dp[i + 1][j + 1], Math.min(dp[i + 1][j], dp[i][j + 1])) + 1;
+                } 
+                ans = Math.max(ans, dp[i][j]);
+            }
+        } 
+        return ans;
+    }
+
+    // word break
+    public static int wordBreak(String str, HashSet<String> set) {
+        // simply add the words into set
+        int[] dp = new int[str.length()];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j <= i; j++) {
+                // <= i because the j will not run for first character
+                String prefix = str.substring(j, i + 1);
+                if (set.contains(prefix)) {
+                    dp[i] += (j > 0) ? dp[j - 1] : 1;
+                }
+            }
+        }
+        return dp[dp.length - 1] > 0;
+    }
+
+    // max sum of 2 non overlapping subarrays
+    public static int maxSumTwoNonOverlappingArr(int[] arr, int x, int y) {
+        int xy = helper(arr, x, y);
+        int yx = helper(arr, y, x);
+        return Math.max(xy, yx);
+    }
+
+    public static int helper(int[] arr, int x, int y) {
+        int[] dp1 = new int[arr.length];
+        int[] dp2 = new int[arr.length];
+        int sum = 0;
+        for (int i = 0; i < dp1.length; i++) {
+            if (i < x) {
+                sum += arr[i];
+                dp1[i] = sum;
+            } else {
+                sum += arr[i] - arr[i - x];
+                dp1[i] = Math.max(dp1[i - 1], sum);
+            }
+        }
+        sum = 0;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (i >= arr.length - y) {
+                sum += arr[i];
+                dp2[i] = sum;
+            } else {
+                sum += arr[i] - arr[i + y];
+                dp2[i] = Math.max(dp2[i + 1], sum);
+            }
+        }
+        int ans = -(int)(1e8);
+        for (int i = x - 1; i < arr.length - y; i++) {
+            ans = Math.max(ans, dp1[i] + dp2[i + 1]);
+        }
+        return ans;
+    }
+
+    // max sum of three non overlapping subarrays of size k
+    public static void maxSum3NonOverlappingSubArr(int[] arr, int k) {
+        int n = arr.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        int[] ps = new int[n];
+        ps[0] = arr[0];
+        for (int i = 1; i < n; i++) {
+            ps[i] = ps[i - 1] + arr[i];
+        }
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            if (i < k) {
+                sum += arr[i];
+                left[i] = sum;
+            } else {
+                sum += arr[i] - arr[i - k];
+                left[i] = Math.max(left[i - 1], sum);
+            }
+        }
+        sum = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            if (i >= n - k) {
+                sum += arr[i];
+                right[i] = sum;
+            } else {
+                sum += arr[i] - arr[i + k];
+                right[i] = Math.max(right[i + 1], sum);
+            }
+        }
+        // now proceed to fit in 3 sub arr
+        int ans = 0;
+        int mSubArrSp = -1;
+        int leftSubArrSum = 0;
+        int rightSubArrSum = 0;
+        for (int i = k; i <= (n - 2 * k); i++) {
+            // left + right + middle(3 sub arr) : ps[i + k - 1] - ps[i - 1]
+            if (left[i - 1] + right[i + k] + (ps[i + k - 1] - ps[i - 1]) > ans) {
+                ans = left[i - 1] + right[i + k] + (ps[i + k - 1] - ps[i - 1]);
+                mSubArrSp = i;
+                leftSubArrSum = left[i - 1];
+                rightSubArrSum = right[i + k];
+            }
+        }
+        // in both left and right we are operating on end points
+        // and loop are starting from left and rigth start points
+        System.out.print(ans + " ");
+        for (int i = k - 1; i < mSubArrSp; i++) {
+            if (leftSubArrSum == (ps[i] - (i - k < 0 ? 0 : ps[i - k]))) {
+                // printing start points
+                System.out.print((i - k + 1) + " ");
+                break;
+            }
+        }
+        System.out.print(mSubArrSp + " ");
+        for (int i = mSubArrSp + (2 * k - 1); i < n; i++) {
+            if (rightSubArrSum == (ps[i] - ps[i - k])) {
+                // printing strt points 
+                System.out.print((i - k + 1) + " ");
+                break;
+            }
+        }
+    }   
+
+    // max sum of M non overlapping subarrays of size k
+    public static int mNonOverlappingSubArr(int[] arr, int m, int k) {
+        int[] ps = new int[arr.length];
+        // ps will have k size arr : sum on ps[i]
+        int sum = 0;
+        for (int i = arr.length - 1; i >= arr.length - k; i--) sum += arr[i];
+        ps[arr.length - 1] = sum;
+        for (int i = arr.length - k - 1, j = arr.length - 1; i >= 0; i--, j--) {
+            sum += arr[i] - arr[j];
+            ps[i + k - 1] = sum;
+        }
+        int[][] dp = new int[arr.length + 1][m + 1];
+        // int ans1 = mNonOverRec(arr, arr.length - 1, m, k, ps, dp);
+        int ans2 = mNonOverDp(arr, m, k, ps);
+        return ans2;
+    }
+
+    public static int mNonOverRec(int[] arr, int idx, int m, int k, int[] ps, int[][] dp) {
+        if (idx <= 0) return 0;
+        if (m == 0) return 0;
+        if (dp[idx][m] != 0) return dp[idx][m]; 
+        int exc = mNonOverRec(arr, idx - 1, m, k, ps, dp);
+        int inc = mNonOverRec(arr, idx - k, m - 1, k, ps, dp) + ps[idx];
+        return dp[idx][m] = Math.max(inc, exc);  
+    };
+
+    public static int mNonOverDp(int[] arr, int M, int k, int[] ps) {
+        int[][] dp = new int[arr.length + 1][M + 1];
+        for (int idx = 0; idx < dp.length; idx++) {
+            for (int m = 0; m < dp[0].length; m++) {
+                if (idx == 0) dp[idx][m] = 0;
+                else if (m == 0) dp[idx][m] = 0;
+                else {
+                    // arr starts from idx = 1, so ps[idx - 1]
+                    int exc = dp[idx - 1][m];
+                    int inc = (idx - k >= 0) ? dp[idx - k][m - 1] + ps[idx - 1] : 0;
+                    dp[idx][m] = Math.max(exc, inc);
+                }
+            }
+        }
+        return dp[dp.length - 1][dp[0].length - 1];
+    }
+
+    // ugly numbers 
+    public static int uglyNum(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        int p2 = 1;
+        int p3 = 1;
+        int p5 = 1;
+        for (int i = 2; i < dp.length; i++) {
+            int f2 = 2 * dp[p2];
+            int f3 = 3 * dp[p3];
+            int f5 = 5 * dp[p5];
+            dp[i] = Math.min(f2, Math.min(f3, f5));
+            if (dp[i] == f2) p2++;
+            if (dp[i] == f3) p3++;
+            if (dp[i] == f5) p5++;
+        }
+        return dp[dp.length - 1];
+    }
+
+    // super ugly numbers
+    public static int superUgly(int[] primes, int n) {
+        int[] ptrs = new int[primes.length];
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        for (int i = 0; i < ptrs.length; i++) ptrs[i] = 1;
+        for (int i = 2; i < dp.length; i++) {
+            int min = (int)(1e8);
+            for (int j = 0; j < primes.length; j++) {
+                min = Math.min(min, primes[j] * dp[ptrs[j]]);
+            }
+            dp[i] = min;
+            for (int j = 0; j < primes.length; j++) {   
+                int factor = primes[j] * dp[ptrs[j]];
+                if (min == factor) ptrs[j]++;
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
+    static class uglyPair implements Comparable<uglyPair> {
+        int prime;
+        int ptr;
+        int factor;
+        public uglyPair(int prime, int ptr, int factor) {
+            this.prime = prime;
+            this.ptr = ptr;
+            this.factor = factor;
+        }
+        public int compareTo(uglyPair o) {
+            return this.factor - o.factor;
+        }
+    }
+
+    public static int superUgly_2(int[] primes, int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        PriorityQueue<uglyPair> pq = new PriorityQueue<>();
+        for (int i = 0; i < primes.length; i++) {
+            pq.add(new uglyPair(primes[i], 1, primes[i]));
+            // initially factor prime * 1;
+        }
+        for (int i = 2; i < dp.length;) {
+            uglyPair cp = pq.remove();
+            if (dp[i - 1] != cp.factor) {
+                dp[i] = cp.factor;
+                i++;
+            }
+            pq.add(new uglyPair(cp.prime, cp.ptr + 1, cp.prime * dp[cp.ptr + 1]));
+        }
+        return dp[dp.length - 1];
+    }
+
+    // water in glass
+    public static double waterInGlass(int k, int r, int c) {
+        double[][] dp = new double[k + 1][k + 1];
+        dp[0][0] = k;
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (dp[i][j] > 1.0) {
+                    double spare = dp[i][j] - 1.0;
+                    dp[i][j] = 1.0;
+                    dp[i + 1][j] += spare / 2;
+                    dp[i + 1][j + 1] += spare / 2;
+                }
+            }
+        }
+        return dp[r][c];
+    }
+
+    // frog jump 
+    public static boolean frogJump(int[] stones) {
+        HashMap<Integer, HashSet<Integer>> map = new HashMap<>();
+        for (int i = 0; i < stones.length; i++) {
+            map.put(stones[i], new HashSet<>());
+        }
+        map.get(stones[0]).add(1);
+        for (int i = 0; i < stones.length; i++) {
+            int currStone = stones[i];
+            HashSet<Integer> jumps = map.get(currStone);
+            for (int j : jumps) {
+                int reachableStone = currStone + j;
+                if (reachableStone == stones[stones.length - 1]) return true;
+                if (map.containsKey(reachableStone)) {
+                    if (j - 1 > 0) map.get(reachableStone).add(j - 1);
+                    map.get(reachableStone).add(j);
+                    map.get(reachableStone).add(j + 1);
+                }
+            }
+        }
+        return false;
+    }
+
+    // scramble string
+    public static boolean scrambleString_rec(String s1, String s2) {
+        if (s1.equals(s2)) return true;
+    
+        // make cuts
+        for (int cp = 1; cp < s1.length(); cp++) {
+            // simple left left && right right
+            // in here we are matching exact left with exact right parts
+            String s1Left_sim = s1.substring(0, cp);
+            String s2Left_sim = s2.substring(0, cp);
+            String s1Right_sim = s1.substring(cp);
+            String s2Right_sim = s2.substring(cp);
+            // cross left right && right left
+            // String s1Left_cross = s1.substring(0, cp);
+            String s2Left_cross = s2.substring(0, s2.length() - cp);
+            // String s1Right_cross = s1.substring(cp);
+            String s2Right_cross = s2.substring(s2.length() - cp);
+
+            if ((scrambleString_rec(s1Left_sim, s2Left_sim) && scrambleString_rec(s1Right_sim, s2Right_sim)) || (scrambleString_rec(s1Left_sim, s2Right_cross) && scrambleString_rec(s1Right_sim, s2Left_cross))) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    // reducing use of substring method
+    public static boolean scrambleString_rec2(String s1, int si1, int ei1, String s2, int si2, int ei2) {
+        if (s1.substring(si1, ei1 + 1).equals(s2.substring(si2, ei2 + 1))) {
+            return true;
+        }
+        for (int cp = 0; cp < ei1 - si1; cp++) {
+            if (
+                (scrambleString_rec2(s1, si1, si1 + cp, s2, si2, si2 + cp) && scrambleString_rec2(s1, si1 + cp + 1, ei1, s2, si2 + cp + 1, ei2)) ||
+                (scrambleString_rec2(s1, si1, si1 + cp, s2, ei2 - cp, ei2) && scrambleString_rec2(s1, si1 + cp + 1, ei1, s2, si2, ei2 - cp - 1))
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }   
+
+    public static boolean scrambleString_rec3(String s1, int si1, String s2, int si2, int len, Boolean[][][] dp) {
+        if (s1.substring(si1, si1 + len).equals(s2.substring(si2, si2 + len))) {
+            return dp[si1][si2][len] = true;
+        }
+        if (dp[si1][si2][len] != null) return dp[si1][si2][len];
+        for (int k = 1; k < len; k++) {
+            if (
+                (scrambleString_rec3(s1, si1, s2, si2, k, dp) && scrambleString_rec3(s1, si1 + k, s2, si2 + k, len - k, dp)) ||
+                (scrambleString_rec3(s1, si1, s2, si2 + len - k, k, dp) && scrambleString_rec3(s1, si1 + k, s2, si2, len - k, dp))
+            ) {
+                return dp[si1][si2][len] = true;
+            }
+        }
+        return dp[si1][si2][len] = false;
+    }
+
+    // scramble string dp
+    public static boolean scramble_dp(String s1, String s2) {
+        // we need frames from 0 to s1.length() + 1;
+        int n = s1.length();
+        boolean[][][] dp = new boolean[n][n][n + 1];
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                for (int j = 0; j <= n - len; j++) {
+                    if (len == 1) {
+                        dp[i][j][len] = (s1.charAt(i) == s2.charAt(j));
+                    } else {
+                        for (int k = 1; k < len && !dp[i][j][len]; k++) {
+                            dp[i][j][len] = ((dp[i][j][k] && dp[i + k][j + k][len - k]) ||
+                                            (dp[i][j + len - k][k] && dp[i + k][j][len - k])); 
+                        }
+                    }
+                }
+            }
+        }
+        return dp[0][0][n];
+    }
+
+    // interleaving strings
+    public static boolean interleaving_1(String s1, String s2, String s3, int i, int j, Boolean[][] dp) {
+        // i s1, j s2
+        if (i == s1.length() && j == s2.length()) {
+            return true;
+        } 
+        if (dp[i][j] != null) return dp[i][j];
+        if (i < s1.length() && s1.charAt(i) == s3.charAt(i + j)) {
+            if (interleaving_1(s1, s2, s3, i + 1, j, dp)) return dp[i][j] = true;
+        }
+        if (j < s2.length() && s2.charAt(j) == s3.charAt(i + j)) {
+            if (interleaving_1(s1, s2, s3, i, j + 1, dp)) return dp[i][j] = true;
+        }
+        return dp[i][j] = false;
+    }
+
+    public static boolean interleaving_2(String s1, String s2, String s3) {
+        boolean[][] dp = new boolean[s1.length() + 1][s2.length() + 1];
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[0].length; j++) {
+                if (i == 0 && j == 0) dp[i][j] = true;
+                else if (i == 0) {
+                    dp[i][j] = (s2.charAt(j - 1) == s3.charAt(i + j - 1)) ? dp[i][j - 1] : false;
+                } else if (j == 0) {
+                    dp[i][j] = (s1.charAt(i - 1) == s3.charAt(i + j - 1)) ? dp[i - 1][j] : false;
+                } else {
+                    if (s1.charAt(i - 1) == s3.charAt(i + j - 1)) {
+                        dp[i][j] = dp[i - 1][j]
+                    } 
+                    // explore below option if dp[i][j] is still false
+                    if (!dp[i][j] && s2.charAt(j - 1) == s3.charAt(i + j - 1)) {
+                        dp[i][j] = dp[i][j - 1];
+                    }
+                }
+            }
+        }
+        return dp[dp.length - 1][dp[0].length - 1];
+    }
+
+    // max len of common subarray
+    public static int longestCommonSubarray(int[] arr1, int[] arr2) {
+        // comparing prefix and finding out common longest suffix
+        int[][] dp = new int[arr1.length + 1][arr2.length + 1];
+        int ans = -(int)(1e8);
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                if (arr1[i - 1] == arr2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = 0;
+                }
+                ans = Math.max(ans, dp[i][j]);
+            }
+        }
+        return ans;
+    }
+
+    // min insertions to make pallindrome
+    // same for min deletions
+    public static int minInsertToMakePal(String str) {
+        int[][] dp = new int[str.length()][str.length()];
+        for (int g = 0; g < dp.length; g++) {
+            for (int i = 0, j = g; j < dp[0].length; i++, j++) {
+                if (g == 0) dp[i][j] = 1;
+                else {
+                    if (str.charAt(i) == str.charAt(j)) {
+                        dp[i][j] = dp[i + 1][j - 1] + 2;
+                    } else dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return str.length() - dp[0][dp[0].length - 1];
+    }
+
     public static void solve() {
       
     }
