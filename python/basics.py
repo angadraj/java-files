@@ -67,3 +67,11 @@ print('yes' if 'angad' == 'angad' else 'no')
 
 ##################
 
+# dictionaries
+my_dict = {
+    "name": "Angad",
+    "class_name": "IT-1",
+    "roll_no": "03"
+}
+print(my_dict["class_name"]);
+
