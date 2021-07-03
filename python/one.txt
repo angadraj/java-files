@@ -1,0 +1,12 @@
+hello I am in one.txt
+hello I am new text in one.txt
+hello I am new text 0 in one.txt
+hello I am new text 1 in one.txt
+hello I am new text 2 in one.txt
+hello I am new text 3 in one.txt
+hello I am new text 4 in one.txt
+hello I am new text 5 in one.txt
+hello I am new text 6 in one.txt
+hello I am new text 7 in one.txt
+hello I am new text 8 in one.txt
+hello I am new text 9 in one.txt
