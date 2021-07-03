@@ -149,7 +149,6 @@ import os
 cwd = os.getcwd()
 print(cwd)
 
-'''
 
 # files management
 one_txt = open('/Users/akashverma/Desktop/java-files/python/one.txt', 'a')
@@ -158,3 +157,4 @@ for i in range (10):
     one_txt.write(f'\nhello I am new text {i} in one.txt')
 # print(one_txt.read())
 one_txt.close()
+'''
