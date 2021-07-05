@@ -1,0 +1,6 @@
+<form method="POST" action="counter">
+    {% csrf_token %}
+    <h1>Welcome {{name}} to the game</h1>
+    <textarea name="text" id="" cols="30" rows="5" placeholder="Enter text"></textarea><br><br>
+    <input type="submit">
+</form>
