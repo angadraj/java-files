@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Feature
 
 # Create your views here.
 context = {
@@ -9,6 +10,10 @@ context = {
 }
  
 def index(request):
+    feature_1 = Feature()
+    feature_1.id = 0
+    feature_1.name = 'Fast'
+    feature_1.details = 'Our Service is very Quick'
     return render(request, 'index.html', context)
 
 # counter function

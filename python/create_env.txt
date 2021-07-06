@@ -26,3 +26,4 @@ python manage.py startapp env
 python manage.py runserver
 
 // applications are sub set of project
+// in static folder, you can add template html and css files

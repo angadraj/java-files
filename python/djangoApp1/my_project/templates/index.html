@@ -1,6 +1,14 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'style.css' %}">
 <form method="POST" action="counter">
     {% csrf_token %}
     <h1>Welcome {{name}} to the game</h1>
     <textarea name="text" id="" cols="30" rows="5" placeholder="Enter text"></textarea><br><br>
     <input type="submit">
 </form>
+<ul>
+    <li class="span">id is 0</li>
+    <li class="span">name is {{name}}</li>
+    <li class="span">details are absent</li>
+</ul>
