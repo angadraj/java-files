@@ -169,6 +169,26 @@ class targetSet {
         return dp[dp.length - 1][dp[0].length - 1];
     }
 
+    // unbounded knapsack is same as inf coin comb
+    public static int unboundedKs_2(int[] profits, int[] wts, int C) {
+        int[] dp = new int[C + 1];
+        // max profit at each dp[c]
+        dp[0] = 0;
+        // cap = 0, then profit = 0;
+        for (int p = 0; p < profits.length; p++) {
+            int profit = profits[p];
+            int wt = wts[p];
+            int ans = 0;
+            for (int cap = 0; cap < dp.length; cap++) {
+                if (cap - wt >= 0) {
+                    int currProfit = profit + dp[cap - wt];
+                    dp[cap] = Math.max(dp[cap], currProfit);
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
     public static void solve() {
 
     }
