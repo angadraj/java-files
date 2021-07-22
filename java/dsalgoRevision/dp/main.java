@@ -311,6 +311,18 @@ class main {
         return prev0 + prev1;
     }
 
+    // count binary strings can be also viewed as fibonacci
+    public static int dp(int n) {
+        int a = 2;
+        int b = 3;
+        for (int i = 3; i <= n; i++) {
+            int sum = a + b;
+            a = b;
+            b = sum;
+        }
+        return b;
+ }
+
     // arange buildings 
     public static int arrangeBuildings(int n) {
         int s = 1;
@@ -438,16 +450,19 @@ class main {
     }   
 
     public static long paintFence(int n, int k) {
-        long same = k;
-        long different = k * (k - 1);
-
-        for(int i = 3; i <= n; i++) {
-            long newSame = different;
-            long newDiff = (same + different) * (k - 1);
-            same = newSame;
-            different = newDiff;
+        long last_two_same = k;
+        long last_two_diff = k * (k - 1);
+        long total = last_two_same + last_two_diff;
+        
+        for (int i = 3; i <= n; i++) {
+            long new_last_two_same = last_two_diff;
+            long new_last_two_diff = total * (k - 1);
+            
+            last_two_same = new_last_two_same;
+            last_two_diff = new_last_two_diff;
+            total = last_two_same + last_two_diff;
         }
-        return (same + different);
+        return total;
     }
 
     public static int tilingWith2X1(int n) {
@@ -525,6 +540,25 @@ class main {
         }
         return totalProfit;
     } 
+
+    // leetcode
+
+   public int maxProfit(int[] prices) {
+        int profit = 0;
+        int min_price = prices[0];
+        
+        for (int i = 0; i < prices.length; i++) {
+            // make transaction
+            int max_price = prices[i];
+            // sell today assuming today is high price
+            profit = Math.max(profit, max_price - min_price);
+            // buy today assuming today is low
+            min_price = Math.min(min_price, max_price);
+        }
+        
+        return profit;
+    }
+
     // in this you need to add all the upstrokes in the graph
     // buy and sell stocks inf trans allowed
 
@@ -541,6 +575,23 @@ class main {
         }   
         cp += (arr[s] - arr[b]) > 0 ? (arr[s] - arr[b]) : 0;
         return cp;
+    }
+
+    public int maxProfit(int[] prices) {
+        int profit = 0;
+        int min_val = prices[0];
+        
+        for (int i = 0; i < prices.length; i++) {
+            // make transaction
+            int max_val = prices[i];
+            if (max_val - min_val >= 0) {
+                profit += max_val - min_val;
+            }
+            // i can also buy at min
+            min_val = max_val;
+        }
+        
+        return profit;
     }
 
     // buy and sell stock with inf transactions but fee amount is there
@@ -647,7 +698,16 @@ class main {
             int profit = -(int)(1e8);
             for(int d = 1; d < dp[0].length; d++) {
                 profit = Math.max(dp[t - 1][d - 1] - arr[d - 1], profit);
-                dp[t][d] = Math.max(profit + arr[d], dp[t][d - 1 ]);
+                dp[t][d] = Math.max(profit + arr[d], dp[t][d - 1]);
+
+                // brute force
+                // int max = -(int)(1e8);
+                // for (int k = 0; k < d; k++) {
+                //     int pdT = dp[t - 1][d];
+                //     int prWithTThTran = arr[d] - arr[k];
+                //     max = Math.max(pdT, prWithTThTran + pdT);
+                // }
+                // dp[t][d] = Math.max(max, dp[t][d - 1]);
             }
         }
         return dp[dp.length - 1][dp[0].length - 1];

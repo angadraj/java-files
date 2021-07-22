@@ -838,6 +838,74 @@ class Adv {
     }
 
     // matrix chain multiplication
+    public static int mcm_rec(int[] arr, int si, int ei, Integer[][] dp) {
+        // single matrix
+        if (ei - 1 == si) return dp[si][ei] = 0;
+
+        if (dp[si][ei] != null) return dp[si][ei];
+        
+        int min = (int)(1e8);
+        for (int cp = si + 1; cp < ei; cp++) {
+            int left = mcm_rec(arr, si, cp);
+            int right = mcm_rec(arr, cp, ei);
+            int self = left + right + (arr[si] * arr[cp] * arr[ei]);
+            min = Math.min(min, self);
+        }
+        return dp[si][ei] = min;
+    }
+
+    public static int mcm_dp(int[] arr) {
+        int[][] dp = new int[arr.length][arr.length];
+        for (int g = 0; g < dp[0].length; g++) {
+            for (int si = 0, ei = g; ei < dp[0].length; si++, ei++) {
+                if (ei - 1 == si) dp[si][ei] = 0;
+                else {
+                    int min = (int)(1e8);
+                    for (int cp = si + 1; cp < ei; cp++) {
+                        int left = dp[si][cp];
+                        int right = dp[cp][ei];
+                        int self = left + right + (arr[si] * arr[cp] * arr[ei]);
+                        min = Math.min(min, self);
+                    }
+                    dp[si][ei] = min;
+                }
+            }
+        }
+        return dp[0][dp[0].length - 1];
+    }
+
+    public static int mcm_string(int[] arr) {
+        int[][] dp = new int[arr.length][arr.length];
+        String[][] dp_s = new String[arr.length][arr.length];
+
+        for (int g = 0; g < dp[0].length; g++) {
+            for (int si = 0, ei = g; ei < dp[0].length; si++, ei++) {
+                if (ei - 1 == si) {
+                    dp[si][ei] = 0;
+                    dp_s[si][ei] = "M" + si;
+                }
+                else {
+                    int min = (int)(1e8);
+                    String mat_a = "";
+                    String mat_b = "";
+                    for (int cp = si + 1; cp < ei; cp++) {
+                        int left = dp[si][cp];
+                        int right = dp[cp][ei];
+                        int self = left + right + (arr[si] * arr[cp] * arr[ei]);
+                        if (self < min) {
+                            min = self;
+                            mat_a = dp_s[si][cp];
+                            mat_b = dp_s[cp][ei];
+                        }
+                    }
+                    dp[si][ei] = min;
+                    dp_s[si][ei] = "(" + mat_a + " " + mat_b + ")"; 
+                }
+            }
+        }
+        return dp[0][dp[0].length - 1];
+    }
+
     public static int mcm(int[] arr) {
         int[][] dp = new int[arr.length - 1][arr.length - 1];
         for (int g = 0; g < dp[0].length; g++) {
@@ -853,6 +921,75 @@ class Adv {
                         min = Math.min(min, left + selfCost + right);
                     }   
                     dp[i][j] = min;
+                }
+            }
+        }
+        return dp[0][dp[0].length - 1];
+    }
+
+    // min-max value expression
+    // min, max
+    static class minMaxPair {
+        int min = (int)(1e8);
+        int max = -(int)(1e8);
+
+        public minMaxPair(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+
+        public minMaxPair() {}
+    }
+
+    // 1 + 2 * 3 + 4 * 5
+    public static minMaxPair minMaxRec(String exp, int si, int ei, minMaxPair[][] dp) {
+        if (si == ei) {
+            int val = (int)(exp.charAt(si) - '0');
+            return new minMaxPair(val, val);
+        }
+        if (dp[si][ei] != null) return dp[si][ei];
+
+        minMaxPair ans = new minMaxPair();
+        for (int cp = si + 1; cp < ei; cp += 2) {
+            char op = exp.charAt(cp);
+            minMaxPair left = minMaxRec(exp, si, cp - 1);
+            minMaxPair right = minMaxRec(exp, cp + 1, ei);
+            minMaxPair eval_ans = eval(op, left, right);
+            ans.min = Math.min(ans.min, eval_ans.min);
+            ans.max = Math.max(ans.max, eval_ans.max);
+        }
+        return dp[si][ei] = ans;
+    }
+
+    public static minMaxPair eval(char op, minMaxPair left, minMaxPair right) {
+        minMaxPair ans = new minMaxPair();
+        if (op == '+') {
+            ans.min = left.min + right.min;
+            ans.max = left.max + right.max;
+        } else if (op == '*') {
+            ans.min = left.min * right.min;
+            ans.max = left.max * right.max;
+        }
+        return ans;
+    }
+
+    public static minMaxPair minMaxDp(String exp, minMaxPair[][] dp) {
+        for (int g = 0; g < dp[0].length; g++) {
+            for (int si = 0, ei = g; ei < dp[0].length; si++, ei++) {
+                if (si == ei) {
+                    int val = (int)(exp.charAt(si) - '0');
+                    dp[si][ei] = new minMaxPair(val, val);
+                } else {
+                    minMaxPair ans = new minMaxPair();
+                    for (int cp = si + 1; cp < ei; cp += 2) {
+                        char op = exp.charAt(cp);
+                        minMaxPair left = dp[si][cp - 1];
+                        minMaxPair right = dp[cp + 1][ei];
+                        minMaxPair eval_ans = eval(op, left, right);
+                        ans.min = Math.min(ans.min, eval_ans.min);
+                        ans.max = Math.max(ans.max, eval_ans.max);
+                    }
+                    dp[si][ei] = ans;
                 }
             }
         }
@@ -901,6 +1038,78 @@ class Adv {
             }
         }
         return trues[0][trues[0].length - 1];
+    }
+
+    static class pair {
+        int T;
+        int F;
+        
+        public pair() {}
+        public pair(int T, int F) {
+            this.T = T;
+            this.F = F;
+        }
+    }
+
+    public static pair rec(String s1, String s2, int si, int ei, pair[][] dp) {
+	    if (si == ei) {
+	        char ch = s1.charAt(si);
+	        if (ch == 'T') return new pair(1, 0);
+	        else if(ch == 'F') return new pair(0, 1);
+	    }
+	    
+	    if (dp[si][ei] != null) return dp[si][ei];
+	    
+	    pair self = new pair();
+	    
+	    for (int cp = si; cp < ei; cp++) {
+	        pair left = rec(s1, s2, si, cp, dp);
+	        pair right = rec(s1, s2, cp + 1, ei, dp);
+	        char op = s2.charAt(cp);
+	        eval(self, left, right, op);
+	    }
+	    
+	    return dp[si][ei] = self;
+	}
+
+    public static pair dp(String s1, String s2, pair[][] dp) {
+	    for (int g = 0; g < dp[0].length; g++) {
+	        for (int si = 0, ei = g; ei < dp[0].length; si++, ei++) {
+	            
+	            if (si == ei) {
+	                char ch = s1.charAt(si);
+	                if (ch == 'T') dp[si][ei] = new pair(1, 0);
+	                else if(ch == 'F') dp[si][ei] = new pair(0, 1);
+	                
+	            } else {
+	                 pair self = new pair();
+	    
+	                for (int cp = si; cp < ei; cp++) {
+	                    pair left = dp[si][cp];
+	                    pair right = dp[cp + 1][ei];
+	                    char op = s2.charAt(cp);
+	                    eval(self, left, right, op);
+	                }
+	    
+	                dp[si][ei] = self;
+	            }
+	        }
+	    }
+	    return dp[0][dp[0].length - 1];
+	}
+	
+    public static void eval(pair self, pair left, pair right, char op) {
+        if (op == '&') {
+            self.T += left.T * right.T; 
+            self.F += left.F * right.F + left.T * right.F + left.F * right.T;
+            
+        } else if (op == '|') {
+            self.T += left.T * right.T + left.T * right.F + left.F * right.T;
+            self.F += left.F * right.F;
+        } else if (op == '^') {
+            self.T += left.T * right.F + left.F * right.T;
+            self.F += left.T * right.T + left.F * right.F;
+        }
     }
 
     // obst 
@@ -1029,6 +1238,51 @@ class Adv {
         }
         return dp[dp.length - 1][dp[0].length - 1];
     }
+
+    public static int rec(int f, int e, Integer[][] dp) {
+	    if (f == 0 || e == 0) return 0;
+	    if (f == 1) return 1;
+	    if (e == 1) return f;
+	    
+	    if (dp[f][e] != null) return dp[f][e];
+	    
+	    int ans = (int)(1e8);
+	    // as we are calculating the number of tries
+	    
+	    for (int k = 1; k <= f; k++) {
+	        int breaks = rec(f - k, e - 1, dp);
+	        int survives = rec(k - 1, e, dp);
+	        ans = Math.min(ans, Math.max(breaks, survives));
+	    }
+	    
+	    return dp[f][e] = ans + 1;
+	}
+
+
+    public static int dp(int F, int E) {
+	    int[][] dp = new int[F + 1][E + 1];
+	    
+	    for (int f = 0; f < dp.length; f++) {
+	        for (int e = 0; e < dp[0].length; e++) {
+	            if (f == 0 || e == 0) dp[f][e] = 0;
+	            else if (f == 1) dp[f][e] = 1;
+	            else if (e == 1) dp[f][e] = f;
+	            else {
+	                int ans = (int)(1e8);
+	                
+	                for (int k = 1; k <= f; k++) {
+	                    int breaks = dp[f - k][e - 1];
+	                    int survives = dp[k - 1][e];
+	                    ans = Math.min(ans, Math.max(breaks, survives));
+	                }
+	                
+	                dp[f][e] = ans + 1;
+	                // add mine try to with best tries
+	            }
+	        }
+	    }
+	    return dp[dp.length - 1][dp[0].length - 1];
+	}
 
     // longest common substring 
     public static int longestCommonSubstring(String s1, String s2) {
@@ -1817,6 +2071,19 @@ class Adv {
         }
         return str.length() - dp[0][dp[0].length - 1];
     }
+
+    // ncr
+    public static long ncr(int n, int r) {
+        if (r > n - r) {
+            r = n - r;
+        }
+        long res = 1;
+        for (int i = 0; i < r; i++) {
+            res = res * (n - i);
+            res = res / (i + 1);
+        }
+        return res;
+    }                          
 
     public static void solve() {
       
