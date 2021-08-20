@@ -1136,6 +1136,416 @@ class basics {
         return true;
     }
 
+    // recurring sequence in a fraction
+    public static String recurringSeq(int N, int D) {
+        StringBuilder sb = new StringBuilder();
+        int q = N / D;
+        int r = N % D;
+
+        sb.append(q);
+        if (r == 0) {
+            return sb.toString();
+        } else {
+            sb.append(".");
+            HashMap<Integer, Integer> map = new HashMap<>();
+            while (r != 0) {
+                if (map.containsKey(r)) {
+                    int idx = map.get(r);
+                    sb.insert(idx, "(");
+                    sb.append(")");
+                    break;
+                } else {
+                    map.put(r, sb.length());
+                    r *= 10;
+                    q = r / D;
+                    r = r % D;
+                    sb.append(q);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    // rabbits in forest
+    // for its theory refer notes
+    public static int rabbitsInForest(int[] arr) {
+        // create the fmap
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+        }
+        int count = 0;
+        for (Integer key: map.keySet()) {
+            int groupSize = key + 1;
+            int totalGroups = (int)Math.ceil((map.get(key) * 1.0) / (groupSize * 1.0));
+            count += totalGroups * groupSize;
+        }
+        return count;
+    }
+
+    // check if given arr ele form AP sequence
+    // an = a0 + (n - 1)d;
+    // d = an - a0 / n - 1
+    // an = max, a0 = min
+    public static boolean isAp(int[] arr) {
+        if (arr.length == 1) return true;
+        int min = (int)(1e8), max = -(int)(1e8);
+        HashSet<Integer> set = new HashSet<>();
+        for (int val: arr) {
+            min = Math.min(min, val);
+            max = Math.max(max, val);
+            set.add(val);
+        }
+        int d = (max - min) / (arr.length - 1);
+        for (int i = 0; i < arr.length; i++) {
+            // ele = a + d, a + 2d, a + 3d ....
+            int ele = min + (i * d);
+            if (!set.contains(ele)) return false;
+        }
+        return true;
+    }
+
+    // smallest subarray with all occurances of highest frequent ele
+    public static void smallestSubArrWithOcc(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        HashMap<Integer, Integer> smap = new HashMap<>();
+
+        int max_freq = 0, si = 0, ei = 0, len = ei - si + 1;
+        for (int i = 0; i < arr.length; i++) {
+            if (map.containsKey(arr[i])) {
+                map.put(arr[i], map.get(arr[i]) + 1);
+            } else {
+                map.put(arr[i], 1);
+                smap.put(arr[i], i);
+            }
+
+            if (map.get(arr[i]) > max_freq) {
+                si = smap.get(arr[i]);
+                ei = i;
+                max_freq = map.get(arr[i]);
+                len = ei - si + 1;
+            } else if (map.get(arr[i]) == max_freq) {
+                // we have a new challenger to prev len
+                int new_len = i - smap.get(arr[i]) + 1;
+                if (new_len < len) {
+                    si = smap.get(arr[i]);
+                    ei = i;
+                    len = new_len;
+                }
+            }
+        }
+        System.out.println(arr[si]);
+        System.out.println(si);
+        System.out.println(ei);
+    }
+
+    // task completion
+    public static void taskCompletion(int n, int marr[]) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int val: marr) set.add(val);
+        String s1 = "", s2 = "";
+
+        boolean sw = true;
+        // true -> s1, false -> s2
+        for (int i = 1; i <= n; i++) {
+            if (!set.contains(i)) {
+                if (sw) {
+                    s1 += i + " ";
+                }
+                else {
+                    s2 += i + " ";
+                }
+                sw = !sw;
+            }
+        }
+        System.out.println(s1);
+        System.out.println(s2);
+    }
+
+    // pairs with given sum in 2 sorted matrices
+
+    // same approach as we did in finding 2 elements in arr that sum upto given tar: space o(n^2) time: o(n^2)
+    // better approach: traverse them as 1d arr on matrices arr1 : start and arr2 : end point
+    // now follow : if (sum > tar) light++ else heavy--;
+    // same as we find tar pair sum in sorted arr
+    public static int countValidPairs(int[][] m1, int[][] m2, int tar) {
+        // both sorted
+        // but in this for duplcate ele this will fail
+        // HashSet<Integer> set = new HashSet<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int[] arr: m1) {
+            for (int val: arr) map.put(val, map.getOrDefault(val, 0) + 1);
+        }
+
+        int count = 0;
+        for (int[] arr: m2) {
+            for (int val: arr) {
+                if (map.containsKey(tar - val)) {
+                    count += map.get(tar - val);
+                }
+            }
+        }
+        return count;
+    }
+    // two pointer approach
+    // pairs with given sum in 2 sorted matrices
+    public static int countValidPairs_2(int[][] m1, int[][] m2, int tar) {
+        // it did not passed one test case, now passed
+        // in this when same elements appear together from both matrices then the count += ele1 * ele2
+        // where ele1 and ele2 are duplicates with sum = k
+        int a = m1.length, b = m1[0].length;
+        int p = m2.length, q = m2[0].length;
+        int count = 0;
+        int i = 0, j = (p * q) - 1;
+        // time : o(n ^ 2)
+        while (i < (a * b) && j >= 0) {
+            int x = m1[i / b][i % b];
+            int y = m2[j / q][j % q];
+            if (x + y == tar) {
+                // try that case in 1d
+                // if (i + 1 < (a * b) && x == m1[(i + 1) / b][(i + 1) % b]) i++;
+                // else if (j - 1 >= 0 && y == m2[(j - 1) / q][(j - 1) % q]) j--;
+                // else {
+                //     i++;
+                //     j--;
+                // }
+                int ele_i = 1, ele_j = 1;
+                while (i + 1 < (a * b) && x == m1[(i + 1) / b][(i + 1) % b]) {
+                    ele_i++;
+                    i++;
+                }
+                while (j - 1 >= 0 && y == m2[(j - 1) / q][(j - 1) % q]) {
+                    ele_j++;
+                    j--;
+                }
+                count += (ele_i * ele_j);
+                // such that it comes to different value after trying all sum pairs which equals k
+                i++; j--;
+            }
+            else if (x + y < tar) i++;
+            else j--;
+        }
+        return count;
+    }
+
+    // pair with given sum : binary search but time is o(n^2 lgn)
+    public static int firstIndex(int[][] arr, int data) {
+        int n = arr.length, si = 0, ei = (n * n) - 1, idx = -1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
+            int mid_ele = arr[mid / n][mid % n];
+            if (mid_ele == data) {
+                idx = mid;
+                // as we have to find first idx, ie move to left if we can
+                // no check required for ei as it will be handled from while loop condition
+                ei = mid - 1;
+            } else if (mid_ele > data) {
+                ei = mid - 1;
+            } else {
+                si = mid + 1;
+            }
+        }
+        return idx;
+    }
+
+    public static int lastIndex(int[][] arr, int data) {
+        int n = arr.length, si = 0, ei = (n * n) - 1, idx = -1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
+            int mid_ele = arr[mid / n][mid % n];
+            if (mid_ele == data) {
+                idx = mid;
+                // as we have to find last idx, ie move to right if we can
+                // no check required for ei as it will be handled from while loop condition
+                si = mid + 1;
+            } else if (mid_ele > data) {
+                ei = mid - 1;
+            } else {
+                si = mid + 1;
+            }
+        }
+        return idx;
+    }
+
+    public static int pairsWithGivenSum_binarySearch(int[][] m1, int[][] m2, int k) {
+        int count = 0;
+        for (int[] arr: m1) {
+            for (int val: arr) {
+                int fi = firstIndex(m2, k - val);
+                if (fi == -1) continue;
+                int li = lastIndex(m2, k - val);
+                if (li == -1) continue;
+                count += (li - fi + 1);
+            }
+        }
+        return count;
+    }
+
+
+    // first non repeating character
+    public static int firstNonRep(String str) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (map.get(ch) == 1) return i;
+        }
+        return -1;
+    }
+
+    // double pair array 
+    public static boolean doublePair(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int val: arr) map.put(val, map.getOrDefault(val, 0) + 1);
+
+        Integer[] n_arr = new Integer[arr.length];
+        for (int i = 0; i < arr.length; i++) n_arr[i] = arr[i];
+
+        Arrays.sort(n_arr, (th, o) -> {
+            return Math.abs(th) - Math.abs(o);
+        });
+
+        for (Integer ele: n_arr) {
+            // case 1: ele for which we look for double does not exist ie: it must have been used
+            // then move fwd
+            if (map.get(ele) == 0) continue;
+            else if (map.getOrDefault(2 * ele, 0) == 0) {
+                // the 2 * x is not there ie I have x but not able to pair with 2 * x
+                return false;
+            } else {
+                // i have x and 2x, so use them
+                map.put(ele, map.get(ele) - 1);
+                map.put(2 * ele, map.get(2 * ele) - 1);
+            }
+        }
+        return true;
+    }
+
+    //quadruplet sum (generic)
+    static Integer three_val = null, four_val = null;
+
+    public static ArrayList<ArrayList<Integer>> twoSum(int[] arr, int si, int ei, int k) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        while (si < ei) {
+            int sum = arr[si] + arr[ei];
+            if (sum < k) si++;
+            else if (sum > k) ei--;
+            else {
+                ArrayList<Integer> ans = new ArrayList<>();
+                ans.add(arr[si]);
+                ans.add(arr[ei]);
+                res.add(ans);
+                si++; ei--;
+                while (si < ei && arr[si] == arr[si - 1]) si++;
+                while (si < ei && arr[ei] == arr[ei + 1]) ei--;
+            }
+        }
+        return res;
+    }
+
+    public static ArrayList<ArrayList<Integer>> threeSum(int[] arr, int si, int ei, int k) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        for (int i = si; i <= ei; i++) {
+            if (i != si && arr[i] == arr[i - 1]) continue;
+            ArrayList<ArrayList<Integer>> ans = twoSum(arr, i + 1, ei, k - arr[i]);
+            addIntoList(res, ans, arr[i]);
+        }
+        return res;
+    }
+
+    public static ArrayList<ArrayList<Integer>> fourSum_sol(int[] arr, int k) {
+        Arrays.sort(arr);   
+        int si = 0, ei = arr.length - 1;
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        for (int i = si; i <= ei; i++) {
+            if (i != si && arr[i] == arr[i - 1]) continue;
+            ArrayList<ArrayList<Integer>> ans = threeSum(arr, i + 1, ei, k - arr[i]);
+            addIntoList(res, ans, arr[i]);
+        }
+        return res;
+    }
+
+    public static void addIntoList(ArrayList<ArrayList<Integer>> res, ArrayList<ArrayList<Integer>> ans, int val) {
+        for (ArrayList<Integer> list: ans) {
+            list.add(0, val);
+            res.add(list);
+        }
+    }
+
+    // quadruplet sum method - 2
+    public static ArrayList<ArrayList<Integer>> quad_sum_2(int[] arr, int k) {
+        Arrays.sort(arr);
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (i != 0 && arr[i] == arr[i - 1]) continue;
+
+            for (int j = i + 1; j < arr.length; j++) {
+                if (j != i + 1 && arr[j] == arr[j - 1]) continue;
+
+                int si = j + 1, ei = arr.length - 1;
+                while (si < ei) {
+                    int sum = arr[i] + arr[j] + arr[si] + arr[ei];
+                    if (sum > k) ei--;
+                    else if (sum < k) si++;
+                    else {
+                        res.add(new ArrayList(Arrays.asList(arr[i], arr[j], arr[si], arr[ei])));
+                        si++;
+                        ei--;
+                        
+                        while (si < ei && arr[si] == arr[si - 1]) si++;
+                        while (si < ei && arr[ei] == arr[ei + 1]) ei--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    // quadruplet sum using hashmap
+    // given 4 arrays find a1 + a2 + a3 + a4 == k
+    public static int count_quadruplet_combi(int[] a, int[] b, int[] c, int[] d, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int count = 0;
+        for (int a1: a) {
+            for (int b1: b) {
+                // as two pairs can have same value therefore we have to make freq map
+                map.put(a1 + b1, map.getOrDefault(a1 + b1, 0) + 1);
+            }
+        }
+        
+        for (int c1: c) {
+            for (int d1: d) {
+                int sum = c1 + d1;
+                if (map.containsKey(k - sum)) {
+                    count += map.get(k - sum);
+                }
+            }
+        }
+        return count;
+    }
+
+    // powerful numbers
+    public static ArrayList<Integer> powerfulNum(int x, int y, int bound) {
+        HashSet<Integer> set = new HashSet<>();
+        // according to given constraints i and j < 20
+        for (int i = 1; i < bound; i *= x) {
+            // logx (b)
+            for (int j = 1; i + j <= bound; j *= y) {
+                // logy (b)
+                set.add(i + j);
+                if (y == 1) break;
+            }
+            if (x == 1) break;
+        }
+        // time : o(logx (b) * logy (b))
+        // space: totalcombi = o(logx b * logy b)
+        return new ArrayList<>(set);
+    }
+    
+
     public static void solve() {
 
     }
