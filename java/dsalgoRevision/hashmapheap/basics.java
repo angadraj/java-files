@@ -213,6 +213,45 @@ class basics {
         return true;
     }
 
+    // count subarrays whose sum is divisble by k
+    public static int countSumDivisibleByK(int[] arr, int k) {
+        HashMap<Integer, Integer> map  = new HashMap<>();
+        // base case for ex: the sum at any pt becomes k and k % k == 0
+        // so 0 must be there as our previous vals contribute in present vals
+        int sum = 0, count = 0;
+        map.put(0, 1);
+        for (int val: arr) {
+            sum += val;
+            int rem = sum % k;
+            if (rem < 0) rem += k;
+            // make if from kn - y to kn' + (k - y)
+            if (map.containsKey(rem)) count += map.get(rem);
+            map.put(rem, map.getOrDefault(rem, 0) + 1);
+        }
+        return count;
+    }
+
+    // longest subarray divisible by k
+    public static int longestSubArrSumDivisbleByK(int[] arr, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        // remainder vs len
+        map.put(0, -1);
+        // sum becomes k and k % k == 0;
+        int len = 0, sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            int val = arr[i];
+            sum += val;
+            int rem = sum % k;
+            if (rem < 0) rem += k;
+
+            if (map.containsKey(rem)) {
+                len = Math.max(len, i - map.get(rem));
+            }
+            map.putIfAbsent(rem, i);
+        }
+        return len;
+    }
+
     // ACQUIRE AND RELEASE GROUP (covers majority of haashmap)
 
     // distinct elements in window of size k
@@ -772,6 +811,8 @@ class basics {
     // count of subarrays whose sum equals k 
     // use -> y + (y - k) = k
     // sum till any point is y then we check if y - k is there, if yes from point of y - k till y sum is k
+
+    // sum at any point in the array is (y - k) and in future it becomes y then the subarray will be equal to k
     public static int solution_countsubarr(int[] arr, int k) {
         HashMap<Integer,Integer> map = new HashMap<>();
         int y = 0, ans = 0;
@@ -1404,6 +1445,9 @@ class basics {
         Integer[] n_arr = new Integer[arr.length];
         for (int i = 0; i < arr.length; i++) n_arr[i] = arr[i];
 
+        // why sort? say it is not sorted, then for a value say 8 u will find 16 and let's say u won't get it
+        // u may assume that it can't be paired even though 4 was there before 16 so it can be paired with that
+        // therefore all ele get their 2 * x in sequence we sorted them
         Arrays.sort(n_arr, (th, o) -> {
             return Math.abs(th) - Math.abs(o);
         });
