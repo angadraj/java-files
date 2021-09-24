@@ -1,0 +1,28 @@
+// create a project in which you will add env
+// you can create multiple projects within same environment
+
+virtualenv thanos (env name)
+
+cd thanos (env name)
+
+source bin/activate
+
+if django is not installed 
+sudo pip install django
+
+else check for version
+python -m django --version
+
+// create a project
+django-admin startproject thanosback (project name)
+
+cd thanosback (project name)
+
+// to check if working fine
+python manage.py runserver
+
+// to create app https://docs.djangoproject.com/en/3.2/intro/tutorial01/
+
+python manage.py startapp polls (app name)
+
+python manage.py runserver

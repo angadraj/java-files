@@ -1,0 +1,5 @@
+first: in the views.py file we import model we need to use
+second: use the view to query the model for data that we need
+third: pass results from the model to templates
+fourth: edit the template such that it is ready to accept data from the model
+fifth: map a URL to the view

@@ -1,0 +1,16 @@
+make a class in models.py or a model
+
+in app.admin.py register that model
+
+make sure you have views for it or set up the views file for it
+or you can say you must have some functionality for that model
+
+link your app urls.py file for redirection
+
+set up the html file
+
+migrating
+
+populate using fake data
+
+write a logic to render data in html file

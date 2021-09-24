@@ -1490,6 +1490,18 @@ class Adv {
     }
 
     // k concatenation
+    // if sum < 0 then kadanesOf2(arr) + (sum * (k - 2))
+    // sum will be -ve so we consider only kadanes of first 2 
+    // in that case also ans can either come from merged 1st and 2nd copy of arr
+    // or only from 1st copy of arr
+
+    // same for +ve sum kadanesOf2(arr) + (sum * (k - 2))
+    // sum will be greater than kadanes of 2
+    // and also if sum > 0 then ans will not be contained only in first copy of arr
+    // it will overlap till second copy 
+    // bcz a, b, c, d, e - ans is b + c + d then if we check overlapping till second copy 
+    // then remaining from 1st arr -> e + (a + b + c + d)
+    // that is b + c + d + (arr) so it will be more than b + c + d
     public static long kadanes(int[] arr) {
         int cb = arr[0];
         int ob = arr[0];

@@ -1,0 +1,37 @@
+// in the project_2 directory
+python manage.py migrate
+
+// register changes
+python manage.py makemigrations (app name) app2
+
+// migrate one more time
+python manage.py migrate
+
+// with this models are made with relation to sql db
+
+// to interact with db
+
+python manage.py shell
+
+from (app name.models) app2.models import Topic (any model)
+
+print(Topic.objects.all())
+
+// add test data
+t = Topic(top_name = "google")
+t.save()
+
+// to add data we will not always use test data so for this we will use admin interface
+
+// but before that we have to register that for our admin interface
+
+// create super user
+python manage.py createsuperuser
+user name : Angad
+email: angadstyle98@gmail.com
+pswd : Angad
+
+// use that admin interface by running server
+
+// to populate data we can use Faker lib
+// pip install Faker
