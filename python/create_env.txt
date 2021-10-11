@@ -20,7 +20,9 @@ cd (to your project folder)
 
 // to start app (env -> enivronment name)
 // add django in project folder else below command won't work
-python manage.py startapp env
+python manage.py startapp env 
+// or 
+django-admin startapp (app_name)
 
 // run django file
 python manage.py runserver

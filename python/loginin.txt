@@ -1,0 +1,6 @@
+this process involves
+    1. setting up the login views
+    2. using built in decorators for access
+    3. adding the login_url in settings
+    4. creating the login.html
+    5. Editing the urls.py file

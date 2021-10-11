@@ -703,9 +703,7 @@ class main {
                 // brute force
                 // int max = -(int)(1e8);
                 // for (int k = 0; k < d; k++) {
-                //     int pdT = dp[t - 1][d];
-                //     int prWithTThTran = arr[d] - arr[k];
-                //     max = Math.max(pdT, prWithTThTran + pdT);
+                //    max = Math.max(max, dp[t - 1][k] + (arr[d] - arr[k]));
                 // }
                 // dp[t][d] = Math.max(max, dp[t][d - 1]);
             }

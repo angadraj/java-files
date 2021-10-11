@@ -1,0 +1,10 @@
+// for user auth and password security use inbuilt libraries
+// in your environment
+pip install bcrypt or 
+pip install django[argon2]
+
+// media directory 
+this is to store user data. ie: profile pik etc
+
+// to work with images :
+pip install pillow
