@@ -1,5 +1,5 @@
 import java.util.*;
-class Arrays {
+class Array {
     // k - con, leetcode
     int mod = (int)(1e9 + 7);
     
