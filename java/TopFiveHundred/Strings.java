@@ -1236,7 +1236,7 @@ class Strings {
                     idx + 1 < word.length() && 
                     arr[dr][dc] == word.charAt(idx + 1)) {
                 ans = ifWordInGrid(arr, dirs, dr, dc, word, idx + 1);
-                if (ans) break;
+                // if (ans) break;
                 // why break: so that all characters are replaced with original ones again
             }
         }

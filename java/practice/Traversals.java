@@ -1,18 +1,6 @@
 import java.util.*;
 import java.lang.*;
 class Traversals{
-    public static void main(String args[]){
-        Scanner sc=new Scanner(System.in);
-        int n=sc.nextInt();
-        int[][] arr=new int [n][n];
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                arr[i][j]=sc.nextInt();
-            }
-        }
-        traversal2(arr);
-
-    }
     public static void traversal1(int[][] arr){
         //bottom left to uper right
         for(int k=arr.length-1;k>=0;k--){
@@ -93,5 +81,14 @@ class Traversals{
             }
             System.out.println();
         }
+    }
+
+    public static void main(String args[]){
+        int[][] arr = {{1, 2, 3, 4},
+                        {5, 6, 7, 8}, 
+                        {9, 10, 11, 12}, 
+                        {13, 14, 15, 16}};
+        traversal1(arr);
+
     }
 }
