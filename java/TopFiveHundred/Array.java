@@ -279,6 +279,7 @@ class Array {
 
     // buy and sell stock infinite transactions allowed
     // also we have to find the days of such profitable transactions
+    // not submitted
     public static ArrayList<ArrayList<Integer>> bns_infTr(int[] arr, ArrayList<ArrayList<Integer>> res) {
         int obp = -arr[0], osp = 0;
         int b_i = 0, s_i = 0;
@@ -649,6 +650,25 @@ class Array {
             o_max = Math.max(max_sf, o_max);
         }
         return o_max;
+    }
+
+    public static int maxProductSubArr2(int[] arr) {
+        int ans = -(int)(1e8), product = 1;
+        // either ans will lie in start or end
+        for (int i = 0; i < arr.length; i++) {
+            product *= arr[i];
+            ans = Math.max(ans, product);
+            if (product == 0) {
+                product = 1;
+            }
+        }
+        product = 1;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            product *= arr[i];
+            ans = Math.max(ans, product);
+            if (product == 0) product = 1;
+        }
+        return ans;
     }
 
     // sort01 
