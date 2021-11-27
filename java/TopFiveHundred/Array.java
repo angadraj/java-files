@@ -882,7 +882,9 @@ class Array {
         int small = arr[0] + k, big = arr[n - 1] - k, min = (int)(1e8), max = -(int)(1e8);
 
         for (int i = 0; i < n - 1; i++) {
+            // the next one is maximum, reduce k from it
             min = Math.min(small, arr[i + 1] - k);
+            // may be this is the smallest so add k in it
             max = Math.max(big, arr[i] + k);
             if (min < 0) continue;
             ans = Math.min(ans, max - min);
@@ -928,9 +930,9 @@ class Array {
         Arrays.sort(ans);
         int swaps = 0;
 
-        for (int i = 0; i < n && i <= k; i++) {
+        for (int i = 0; i < n; i++) {
             if (ans[i] > k) break;
-            else if (arr[i] > k) {
+            else if (arr[i] > k && ans[i] <= k) {
                 swaps++;
             }
         }
@@ -982,6 +984,7 @@ class Array {
         // now apply the window
         for (int i = k; i < n; i++) {
             sum = sum + arr[i] - arr[i - k];
+            // this ensured that we have window sum of exactly k elements
             res = Math.max(res, sum);
             // now you have k ele, also add subarray sum before that window to make atleast k ele
             res = Math.max(res, sum + maxSum[i - k]);

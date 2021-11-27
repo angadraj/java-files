@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'posts/post_base.html' %}
+    {% load bootstrap3 %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block post_content %}
+        <h4>Create a new Post</h4>
+        <form action="{% url 'posts:create' %}" method="POST" id="postForm">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <input type="submit" value="Post" class="btn btn-primary btn-large">
+        </form>
+    {% endblock %}
+</body>
+</html>

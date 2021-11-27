@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+{% load static %}
+<div>
+    <h2>Content from base html</h2>
+    <img src="{% static 'images/feefo.svg' %}" alt="feefo image">
+</div>
+
+{% block body_block %}
+    <!-- content you don't want to inherit -->
+{% endblock %}

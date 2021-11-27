@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% extends "app_2/base.html" %}
+<!-- load static files -->
+    {% load static %}
+    
+    {% block body_block %}
+    <h1>hello world! This is index.html</h1>
+    <!-- login logic -->
+    <a href="/myview">Look for class views</a>
+
+     <div>
+        {% if user.is_authenticated %}
+            <a href="/logout">LOGOUT</a>
+        {% else %}
+            <a href="/login">LOGIN</a>
+        {% endif %}
+     </div>
+     <div><a href="/register">Register Now</a></div>
+
+    <!--  -->
+
+         <!-- template tags -->
+    <!-- <div class="custom-table">
+        {% if access_records %}
+        <table>
+            <thead>
+                <th>site name</th>
+                <th>date accessed</th>
+            </thead>
+            {% for acc in access_records %}
+            <tr>
+                <td>{{acc.name}}</td>
+                <td>{{acc.date}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h1>NO ACCESS RECORDS FOUND!</h1>
+        {% endif %}
+    </div> -->
+    <!--  -->
+    <a href="/signup">Signup Here!</a>
+    <br>
+    <a href="/help">Click For Help!</a>
+    <a href="/admin">Visit our admin page</a>
+    <br>
+    <a href="/users">View our users</a>
+    <br>
+    <a href="/form">Go to form page</a>
+    <br>
+        
+    {% endblock %}
+</body>
+</html>

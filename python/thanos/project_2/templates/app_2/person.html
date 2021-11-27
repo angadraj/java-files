@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USERS</title>
+</head>
+
+<body>
+    <h1>We welcome you to view our users</h1>
+    <!-- template tags -->
+    {% if persons %}
+    <ol>
+    {% for i in persons %}
+        <li>User Info</li>
+        <ul>
+            <li>First name: {{ i.first_name }}</li>
+            <li>Last name: {{ i.last_name }}</li>
+            <li>Email: {{ i.email }}</li>
+        </ul>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <h2>NO users to show</h2>
+    {% endif %}
+    <!--  -->
+</body>
+
+</html>
