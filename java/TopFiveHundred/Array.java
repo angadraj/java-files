@@ -1296,11 +1296,16 @@ class Array {
         int si = 0, ei = 0, prev = 0, ans = 0, n = arr.length;
         while (ei < n) {
             if (arr[ei] >= L && arr[ei] <= R) {
+                // subarrays ending at ei
+                // now if any value comes greater than L and less than R after that point (ei)
+                // then subarray is also valid
                 prev = ei - si + 1;
                 ans += prev;
             } else if (arr[ei] < L) {
+                // this subarray is not valid, so ans will be last count
                 ans += prev;
             } else if (arr[ei] > R) {
+                // this subarray is not valid, so reset all
                 si = ei + 1;
                 prev = 0;
             }
@@ -1362,6 +1367,14 @@ class Array {
     } 
 
     // Find minimum number of merge operations to make an array palindrome
+    /**
+        To make any array a palindrome, we can simply apply merge operation n-1 times 
+        where n is the size of the array (because a single-element array is always palindromic,
+        similar to single-character string).
+        In that case, the size of array will be reduced to 1. But in this problem, 
+        we are asked to do it in the minimum number of operations.
+        {11, 14, 15, 99}
+    */
     public static int minMergeOperations(int[] arr) {
         int i = 0, j = arr.length - 1, count = 0;
         while (i < j) {
@@ -1524,6 +1537,7 @@ class Array {
         // int bit = (idx & 31);
         // int mask = (1 << bit);
         // arr[(idx >> 5)] |=  mask;
+        // idx >> 5 = idx / 32 (32 = 2^5)
         arr[(idx >> 5)] |= (1 << (idx & 31));
     }
 

@@ -447,22 +447,24 @@ class Sorting {
 
     public static void radixSortHelper(int[] arr, int exp) {
         // count sort for radix sort
+        // num / 10^pow = drops unit, tens etc places
+        // num % 10 = gives the last digit 
         int n = arr.length;
         int[] ans = new int[n];
         // as number of digits will vary from 0 - 9
         int[] farr = new int[10];
         for (int i = 0; i < n; i++) {
             // to extract the number
-            farr[arr[i] / exp % 10]++;
+            farr[(arr[i] / exp) % 10]++;
         }
         // make prefix sum of farr
         for (int i = 1; i < farr.length; i++) farr[i] += farr[i - 1];
         // 
         for (int i = n - 1; i >= 0; i--) {
             int val = arr[i];
-            int pos = farr[val / exp % 10];
+            int pos = farr[arr[i] / exp) % 10];
             ans[pos - 1] = val;
-            farr[val / exp % 10]--;
+            farr[arr[i] / exp) % 10]--;
         }
         // copy the elements from ans to arr
         for (int i = 0; i < n; i++) arr[i] = ans[i];
@@ -601,7 +603,7 @@ class Sorting {
                 else if (sum == k) {
                     // to make sure that sum does not equals k on release of same ele which has been 
                     // acquired now
-                    if (i < j) {
+                    if (i > j) {
                         ArrayList<Integer> ans = new ArrayList<>();
                         ans.add(j + 1); ans.add(i);
                         res.add(ans);
@@ -724,6 +726,7 @@ class Sorting {
 
     // find duplicated in o(n) time and constant space
     // arr[i] = [0, n - 1];
+    // sum is used as numbers are from 0 - (n - 1) and case of is not handled by that old methd
     public static ArrayList<Integer> findDups(int[] arr) {
         ArrayList<Integer> ans = new ArrayList<>();
         int n = arr.length;
@@ -984,6 +987,19 @@ class Sorting {
         return false;
     }
 
+    public static boolean findPermutation2(int[] a, int[] b, int k) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        int i = 0, j = b.length - 1;
+        while (i < a.length && j >= 0) {
+            if (a[i] + b[j] < k) return false;
+            else {
+                i++; j--;
+            }
+        }
+        return true;
+    }
+
     // Find pair with greatest product in array
     // Given an array of n elements, the task is to find the greatest number such that it 
     // is product of two elements of given array. If no such element exists, print -1.
@@ -1001,13 +1017,19 @@ class Sorting {
                     int result = arr[i] / arr[j];
                     // check if result is in array 
                     // if it is there the arr[i] will be ans
-                    if (result != arr[j] && 
-                        map.get(result) == null || map.get(result) > 0) {
+                    if (result != arr[j] && result != arr[i] && map.getOrDefault(result, 0) > 0) {
                         return arr[i];
                     }
                     // to handle cases like arr[i] = 4
                     // arr[j] = 2, result = 2
-                    else if (result == arr[j] && map.get(result) > 1) return arr[i];
+                    else if (result == arr[j] && map.getOrDefault(result, 0) > 1) {
+                        return arr[i];
+                    
+                    } else if (result == arr[i] && map.getOrDefault(result, 0) > 1) {
+                        // when i is on 1 and j is on 13 
+                        // and there is one more 13
+                        return arr[i];
+                    }
                 }
             }
         }

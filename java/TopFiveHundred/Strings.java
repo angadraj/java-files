@@ -518,7 +518,7 @@ class Strings {
 
     // pallindrome & permutation
     // codechef : PERMPAL
-    // special case: malyalam
+    // special case: malayalam
     public static void permPal(String s) {
         int n = s.length();
         HashMap<Character, ArrayList<Integer>> map = new HashMap<>();
@@ -548,6 +548,7 @@ class Strings {
             }
 
             // else the list is even and now we need to add chars at extremes
+            // case like A M M A M M A : odd = 3, when 1 char is at middle 2 are remaining
             for (int j = 0; j < list.size(); j++) {
                 if ((j & 1) == 0) arr[si++] = list.get(j) + 1;
                 else arr[ei--] = list.get(j) + 1;
@@ -624,6 +625,7 @@ class Strings {
             while (farr[i] > 0 && si < ei) {
                 arr[si++] = (char)(i + 'a');
                 farr[i]--;
+                // this is for odd freq, because at this point it will be 0;
                 if (farr[i] == 0) break;
                 arr[ei--] = (char)(i + 'a');
                 farr[i]--;
@@ -1754,7 +1756,8 @@ class Strings {
     }
 
     public static void solve() {
-        String s = "ABCBCA";
+        String s = "malayalam";
+        permPal(s);
         
         // System.out.println(ans);
     }

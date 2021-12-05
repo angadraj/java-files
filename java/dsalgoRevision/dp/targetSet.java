@@ -104,6 +104,8 @@ class targetSet {
         if (len == 0 || cap == 0 || cap < 0) {
             return cap < 0 ? -(int)(1e8) : 0;
         }
+
+        if (dp[len][cap] != null) return dp[len][cap];
         
         int profit = profits[len - 1];
         int wt = wts[len - 1];
