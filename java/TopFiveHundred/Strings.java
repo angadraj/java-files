@@ -1042,6 +1042,8 @@ class Strings {
                 if (ch == s1.charAt(p)) {
                     for (int q = j; q < s2.length(); q++) {
                         if (ch == s2.charAt(q) && dp[i][j] == lcsLen - len) {
+                            // dp[i][j] == lcsLen - len => we are checking remaining length
+                            // of lcs required to find
                             printAllLCS(s1, s2, res, len + 1, ans + ch, p + 1, q + 1);
                             flag = true;
                             // break ensures that for one p multiple q are not find
@@ -1088,7 +1090,7 @@ class Strings {
         int[][] dp = SCSlen(s1, s2);
         char[] arr = new char[s1.length() + s2.length() - dp[0][0]];
         int i = 0, j = 0, idx = 0;
-        while (i < s1.length() || j < s2.length()) {
+        while (i < s1.length() && j < s2.length()) {
             char ith = s1.charAt(i), jth = s2.charAt(j);
             if (ith == jth) {
                 arr[idx++] = ith;
@@ -1497,6 +1499,7 @@ class Strings {
             ans |= wildCardMatcher(s, p, i + 1, j + 1);
         } else if (chp == '*') {
             ans |= wildCardMatcher(s, p, i + 1, j);
+            // * becomes blank, try next char of pattern
             ans |= wildCardMatcher(s, p, i, j + 1);
         } else if (chs != chp) ans = false;
         return ans;
