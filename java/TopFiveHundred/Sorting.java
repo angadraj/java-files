@@ -1102,6 +1102,55 @@ class Sorting {
         return count;
     }
 
+    // count reverse pairs: 
+    // i < j and arr[i] <= 2 * arr[j]
+    public static int countReversePairs(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        return countReversePairs_rec(arr, 0, n - 1, ans);
+    }
+
+    public static int countReversePairs_rec(int[] arr, int si, int ei, int[] ans) {
+        if (si == ei) return 0;
+        int mid = (si + ei) >> 1; 
+        int left = countReversePairs_rec(arr, si, mid, ans);
+        int right = countReversePairs_rec(arr, mid + 1, ei, ans);
+        int self = countReversePairs_merge(arr, si, mid, ei, ans);
+        return (left + self + right);
+    }
+
+    public static int countReversePairs_merge(int[] arr, int si, int mid, int ei, int[] ans) {
+        int i, j = mid + 1, k = si, count = 0;
+        for (i = si; i <= mid; i++) {
+            while (j <= ei && arr[i] > 2 * (long) arr[j]) {
+                j++;
+            }
+            // it means that from mid + 1 till j - 1 all elements satisfy the above condition
+            count += (j - (mid + 1));
+        }
+        // re-assign after work
+        i = si, j = mid + 1;
+        while (i <= mid && j <= ei) {
+            if (arr[i] <= arr[j]) {
+                ans[k++] = arr[i++];
+            } else {
+                ans[k++] = arr[j++];
+            }
+        }
+        while (i <= mid) {
+            ans[k++] = arr[i++];
+        }
+        while (j <= ei) {
+            ans[k++] = arr[j++];
+        }
+        int p = si;
+        while (p <= ei) {
+            arr[p] = ans[p];
+            p++;
+        }
+        return count;
+    }
+
     public static void solve() {
         int[] a = {10, 19, 6, 3, 5};
         int ans = minSwapsToMakeSorted(a);

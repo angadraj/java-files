@@ -52,6 +52,44 @@ class directedGraph {
         }
     }
 
+    // bfs : kahn's algo
+    public static void kahnsAlgo(ArrayList<Edge>[] graph) {
+        int n = graph.length;
+        ArrayList<Integer> ans = new ArrayList<>();
+        int[] indeg = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (Edge e: graph[i]) {
+                indeg[e.v]++;
+            }
+        }
+        Queue<Integer> qu = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indeg[i] == 0) qu.add(i);
+        }
+        if (qu.size() == 0) {
+            System.out.println("Deadlock");
+            return;
+        }
+        int cnt = 0;
+        while (qu.size() > 0) {
+            int size = qu.size();
+            while (size-- > 0) {
+                int e = qu.remove();
+                cnt++;
+                ans.add(e);
+                for (Edge e: graph[e]) {
+                    indeg[e.v]--;
+                    if (indeg[e.v] == 0) qu.add(e.v);
+                }
+            }
+        }
+        if (cnt == n) {
+            System.out.println(ans);
+        } else {
+            System.out.println("not possible");
+        }
+    }
+
     public static void solve() {
         ArrayList<Edge>[] graph = construct();
         int src = 0;
