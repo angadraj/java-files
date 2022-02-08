@@ -591,10 +591,211 @@ class hashmap {
         return len;
     }
 
+    // group shifted strings
+    // strings are shifted if 
+    // s[i] = t[i] + k;
+    public static void groupShiftedString(String[] arr) {
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            String key = groupShiftedString_helper(arr[i]);
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(arr[i]);
+        }
+        System.out.print(map);
+    }
+
+    public static String groupShiftedString_helper(String s) {
+        if (s.length() == 1) return "#";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < s.length(); i++) {
+            char prev = s.charAt(i - 1), curr = s.charAt(i);
+            int val = curr - prev;
+            if (prev > curr) val += 26;
+            sb.append(val);
+        }
+        return sb.toString();
+    }
+
+    // rabin karp related
+    // Palindrome Substring Queries
+
+    //  Find four elements a, b, c and d in an array such that a+b = c+d
+    static class solveEqn_pair {
+        int a, b;
+        solveEqn_pair(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+    }
+    
+    public static int[] solveEqn(int[] arr) {
+        HashMap<Integer, solveEqn_pair> map = new HashMap<>();
+        int[] ans = {-1, -1, -1, -1};
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                int sum = arr[i] + arr[j];
+                if (!map.containsKey(sum)) {
+                    map.put(sum, new solveEqn_pair(i, j));
+                } else {
+                    solveEqn_pair prev = map.get(sum);
+                    ans[0] = prev.a;
+                    ans[1] = prev.b;
+                    ans[2] = i;
+                    ans[3] = j;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+    // Subarrays with distinct elements
+    // the task is to calculate the sum of lengths of contiguous subarrays having all elements distinct.
+    public static int sumOfLengthContiSubArr(int[] arr) {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            HashSet<Integer> set = new HashSet<>();
+            set.add(arr[i]);
+            //
+            sum += set.size();
+            //
+            int min = arr[i], max = arr[i];
+            for (int j = i + 1; j < arr.length; j++) {
+                if (set.contains(arr[j])) {
+                    break;
+                }
+                min = Math.min(min, arr[j]);
+                max = Math.max(max, arr[j]);
+
+                set.add(arr[j]);
+                if (max - min == j - i) {
+                    // len update for longest contiguous sequence
+                    sum += set.size();
+                }
+            }
+        }
+        return sum;
+    }
+
+    // if the array is not required as contiguos
+    public static int sumOfLength(int[] arr) {
+        HashSet<Integer> set = new HashSet<>();
+        int j = 0, sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            while (j < arr.length && !set.contains(arr[j])) {
+                set.add(arr[j]);
+                j++;
+            }
+            sum += ((j - i) * (j - i + 1)) / 2;
+            // removing is important because when there will be dup then until that dup 
+            // is removed from set, j will not proceed;
+            set.remove(arr[i]);
+        }
+        return sum;
+    }
+
+    // Find Recurring Sequence in a Fraction
+    public static String recurringFraction(int nr, int dr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int rem = nr % dr;
+        String ans = "";
+        int firstQuot = nr / dr;
+
+        while (rem != 0 && !map.containsKey(rem)) {
+            map.put(rem, ans.length());
+            rem = rem * 10;
+            int quot = rem / dr;
+            ans += quot;
+            rem = rem % dr;
+        }
+        // if (rem == 0) {
+        //     return "";
+        // } else {
+        //     // return ans.substring(map.get(rem));
+        //     return ans;
+        // }
+        if (ans.length() == 0) {
+            // completely divisble
+            ans = firstQuot + ans;
+        } else {
+            ans = firstQuot + ".(" + ans + ")";
+        }
+        return ans;
+    }
+
+    // K maximum sum combinations from two arrays
+    // A sum combination is made by adding one element from array A and another 
+    // element of array B. Display the maximum K valid 
+    // sum combinations from all the possible sum combinations. 
+    static class pairSum {
+        int sum, i, j;
+        public pairSum(int sum, int i, int j) {
+            this.sum = sum;
+            this.i = i;
+            this.j = j;
+        }
+    }
+
+    static class pair {
+        int i, j;
+        public pair(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) return false;
+            if (!(o instanceof pair)) return false;
+            pair obj = (pair)o;
+            return (i == obj.i && j == obj.j);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(i, j);
+        }
+    }
+
+    public static void KMaxCombiFromTwoArr(int[] a, int[] b, int k) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        
+        HashSet<pair> set = new HashSet<>();
+        PriorityQueue<pairSum> pq = new PriorityQueue<>((t, o) -> {
+            return o.sum - t.sum;
+        });
+        int n = a.length - 1, m = b.length - 1;
+        pq.add(new pairSum(a[n] + b[m], n, m));
+        set.add(new pair(n, m));
+
+        for (int p = 0; p < k; p++) {
+            pairSum cp = pq.remove();
+            System.out.print(cp.sum + " ");
+            
+            n = cp.i - 1;
+            m = cp.j;
+            if (n >= 0 && m >= 0 && !set.contains(new pair(n, m))) {
+                pq.add(new pairSum(a[n] + b[m], n, m));
+                set.add(new pair(n, m));
+            }
+
+            n = cp.i;
+            m = cp.j - 1;
+            if (n >= 0 && m >= 0 && !set.contains(new pair(n, m))) {
+                pq.add(new pairSum(a[n] + b[m], n, m));
+                set.add(new pair(n, m));
+            }
+        }
+    }
+ 
     public static void solve() {
-       int[] arr = {10, 12, 12, 10, 10, 11, 10};
-       int ans = largestSubArrWithContigSeq(arr);
-       System.out.println(ans);
+        int[] a = { 1, 4, 2, 3 };
+        int[] b = { 2, 5, 1, 6 };
+        KMaxCombiFromTwoArr(a, b, 4);
+        // System.out.println(ans);
     }
 
     public static void main(String[] args) {
