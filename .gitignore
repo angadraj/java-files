@@ -1,5 +1,7 @@
 *.class
 
+*secrets.js
+
 staticfiles-cdn/
 
 .DS_Store

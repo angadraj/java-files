@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
-const db_link = 'mongodb+srv://AngadRajSingh:root@cluster0.ogdrv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const {connectDB} = require('../secrets');
 
-mongoose.connect(db_link)
-.then(function() {
-    console.log("review db connected")
-})
-.catch(function(e) {
-    console.log(e);
-});
+connectDB();
 
 // from front end, I only want user to send review text and rating
 // user id and plan id will be controlled on backend

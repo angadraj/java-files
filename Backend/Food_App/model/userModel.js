@@ -2,14 +2,9 @@ const mongoose = require('mongoose');
 const emailValidator = require('email-validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const db_link = 'mongodb+srv://AngadRajSingh:root@cluster0.ogdrv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const {connectDB} = require('../secrets');
 
-mongoose.connect(db_link)
-.then(function() {
-    console.log('user db connected');
-}).catch(function(err) {
-    console.log(err);
-})
+connectDB();
 
 const userSchema = mongoose.Schema({
     // this = current doc
