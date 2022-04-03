@@ -790,6 +790,18 @@ class hashmap {
             }
         }
     }
+
+    // longest subarray with distinct elements
+    public static int longestSubArrWithDistEle(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int ans = 0;
+        for (int i = 0, j = 0; i < arr.length; i++) {
+            j = Math.max(map.getOrDefault(arr[i], 0), j);
+            ans = Math.max(ans, i - j + 1);
+            map.put(arr[i], i);
+        }
+        return ans;
+    }
  
     public static void solve() {
         int[] a = { 1, 4, 2, 3 };
