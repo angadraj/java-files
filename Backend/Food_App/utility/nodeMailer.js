@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const mailPass = require('../secrets');
+
 module.exports.sendMail = async function sendMail(str, data) {
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -6,7 +8,7 @@ module.exports.sendMail = async function sendMail(str, data) {
         secure: false, // true for 465, false for other ports
         auth: {
           user: "angadstyle98@gmail.com", // generated ethereal user
-          pass: "pmkzyruweljaovve", // generated ethereal password
+          pass: mailPass, // generated ethereal password
         },
     }); 
 

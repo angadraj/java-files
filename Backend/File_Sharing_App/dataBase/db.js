@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const db_link = "";
+require('dotenv').config();
 
-mongoose.connect(db_link)
+mongoose.connect(process.env.DB_LINK)
 .then(function() {
     console.log("file sharing db connected");
 })
