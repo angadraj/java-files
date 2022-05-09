@@ -299,12 +299,52 @@ class tough {
     // 2141: parallel processing
     // binary search
 
+    // leetcode 2081
+    public static void kMirror(int k) {
+        ArrayList<Long> ans = new ArrayList<>();
+        long i = 1;
+        int total = 33, count = 0;
+        while (i <= Long.MAX_VALUE) {
+            if (pall(i)) {
+                long kBaseNum = getKBaseNum(i, k);
+                if (pall(kBaseNum)) {
+                    ans.add(i);
+                    count++;
+                    if (count == total) break;
+                }
+            }
+            i++;
+        }    
+        System.out.println(ans);
+    }
+
+    public static long getKBaseNum(long x, int k) {
+        long ans = 0;
+        long pow = 1;
+
+        while (x != 0) {
+            long rem = x % k;
+            x = x / k;
+            ans = (rem * pow) + ans;
+            pow = pow * 10;
+        }   
+        return ans;
+    }
+
+    public static boolean pall(long x) {
+       long copy = x;
+       long ans = 0;
+
+       while (x != 0) {
+           long rem = x % 10;
+           ans = (ans * 10) + rem;
+           x = x / 10;
+       }
+       return (ans == copy);
+    }
 
     public static void solve() {
-        String[] a = {"ant","act","tack"};
-        String[] b = {"tack","act","acti"};
-        int ans = wordCount(a, b);
-        
+        kMirror(2);
     }
     
     public static void main(String args[]) {
