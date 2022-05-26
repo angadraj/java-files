@@ -420,4 +420,103 @@ class binarySearch {
         }
         return ans;
     }
+
+    // min speed to arrive on time
+    public int minSpeedOnTime(int[] dist, double hour) {
+        int si = 0, ei = (int)(1e8), ans = -1;
+        
+        while (si < ei) {
+            int mid = (si + ei) >> 1;
+            if (predicate(dist, hour, mid)) {
+                ei = mid;
+                ans = mid;
+            } else {
+                si = mid + 1;
+            }
+        }
+        
+        return ans;
+    }
+    // ************* IMPORTANT LOGIC TO FIND CEIL ******************** //
+    
+    public boolean predicate(int[] arr, double k, int mid) {
+        double sum = 0;
+        for (int val: arr) {
+            // why ceil, so that if a train time ends up in 2.5 then we can wait till 0.5 hrs
+            // and depart with other train.
+            if (sum > (int)(sum)) {
+                sum = (double)(((int)(sum) + 1));
+                // sum = Math.ceil(sum); // costly operation
+            }
+            sum += (double)(val) / (double)(mid);
+        }
+        
+        return (sum <= k);
+    }
+
+    // Range freq query
+    class RangeFreqQuery {
+        HashMap<Integer, ArrayList<Integer>> map;
+        
+        public RangeFreqQuery(int[] arr) {
+            map = new HashMap<>();
+            
+            for (int i = 0; i < arr.length; i++) {
+                if (map.containsKey(arr[i]) == false) {
+                    map.put(arr[i], new ArrayList<>());
+                }
+                map.get(arr[i]).add(i);
+            }
+        }
+    
+        public int query(int L, int R, int ele) {
+            
+            if (!map.containsKey(ele)) {
+                return 0;
+            }
+            
+            ArrayList<Integer> list = map.get(ele);
+            
+            int lb = lowerbound(list, L);
+            int ub = upperbound(list, R);
+            
+            // System.out.println(lb + ", " + ub);
+            return ub - lb;
+        }
+    
+        public int lowerbound(ArrayList<Integer> arr, int k) {
+            int si = 0, ei = arr.size(), mid = -1;
+            while (si < ei) {
+                mid = (si + ei) >> 1;
+                int ele = arr.get(mid);
+                
+                if (k <= ele) {
+                    // i want to consider that ele because it can be single as well
+                    ei = mid;
+                } else {
+                    si = mid + 1;
+                    // if the element is bigger then it must be inserted after the current ele
+                }
+            }
+            return si;
+        }
+    
+        public int upperbound(ArrayList<Integer> arr, int k) {
+            int si = 0, ei = arr.size(), mid = -1;
+            while (si < ei) {
+                mid = (si + ei) >> 1;
+                int ele = arr.get(mid);
+                
+                if (k >= ele) {
+                    // I want next bigger element than the ele
+                    // i don't want k == ele , that is why i neglected mid ele also and moved to mid+1
+                    si = mid + 1;
+                } else {
+                    ei = mid;
+                    // if the ele is smaller then search on left
+                }
+            }
+            return si;
+        }
+    }
 }
